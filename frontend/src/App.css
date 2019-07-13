@@ -1,0 +1,25 @@
+.wrapper {
+  display: flex;
+  justify-content: flex-start;
+  margin: 24px;
+}
+
+.paper {
+  display: flex;
+  flex: 1;
+  padding: 15px;
+  margin: 0 12px 0 12px;
+  height: 90vh;
+  overflow-y: auto;
+  
+}
+
+.queryContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.preview {
+  width: 100%;
+  border: 0;
+}

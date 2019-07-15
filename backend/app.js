@@ -2,12 +2,20 @@ const express = require('express');
 const request = require('request');
 const get = require('lodash/get');
 const cors = require('cors');
-
-const PORT = 3000;
-const ENDPOINT = 'https://api.cognitive.microsoft.com/bingcustomsearch/v7.0/search?customConfig=2c00195d-395e-4003-8739-aacb861d0307';
+const bodyParser = require('body-parser');
+const createCsvWriter = require('csv-writer').createArrayCsvWriter;
+const configs = require('./configs');
 
 const app = express();
+
+app.use(bodyParser.json())
 app.use(cors());
+
+const csvWriter = createCsvWriter({
+  header: ['DATE', 'QUERY', 'URL', 'IS_RELATED'],
+  path: './data.csv',
+  append: true,
+});
 
 const options = {
   headers: {
@@ -19,8 +27,8 @@ const response = {
   values: [],
 }
 
-app.listen(PORT, () => {
-  console.log(`Server is up at port ${PORT}`);
+app.listen(configs.PORT, () => {
+  console.log(`Server is up at port ${configs.PORT}`);
 });
 
 app.get('/', (req, res) => {
@@ -28,23 +36,37 @@ app.get('/', (req, res) => {
 
   request({
     ...options,
-    url: `${ENDPOINT}&q=${query}`,
+    url: `${configs.ENDPOINT}&q=${query}`,
     method: 'GET'
-  }, (err, r) => {
-    console.log('err', err);
-    console.log('r', r);
-    if (err) {
-      console.log('err', err);
-      res.status(300).json({ });
+  }, (error, r) => {
+    
+    if (error) {
+      res.status(300).json({ error });
       return;
     }
     
     const json = JSON.parse(r.body);
-    console.log('json', json);
     res.json({
       ...response,
       values: get(json, 'webPages.value', [])
     });
-    
   });
+});
+
+app.post('/', (req, res) => {
+  const params = {
+    query, webPage , isRelated
+  } = req.body;
+  
+  csvWriter.writeRecords([[
+    Date.now(), query, webPage.url, isRelated
+  ]])
+    .then(() =>{
+      console.log('write complete');
+    })
+    .catch(err =>{
+      console.log('err', err);
+    });
+  
+  res.json({ test: 'ok' });
 });

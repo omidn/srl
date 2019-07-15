@@ -19,7 +19,7 @@ const csvWriter = createCsvWriter({
 
 const options = {
   headers: {
-    'Ocp-Apim-Subscription-Key': '9ca75d30efde4f9e927a30ca936ad8b4',
+    'Ocp-Apim-Subscription-Key': configs.SUBSCRIPTION_KEY,
   },
 }
 

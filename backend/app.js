@@ -6,11 +6,6 @@ const bodyParser = require('body-parser');
 const createCsvWriter = require('csv-writer').createArrayCsvWriter;
 const configs = require('./configs');
 
-const app = express();
-
-app.use(bodyParser.json())
-app.use(cors());
-
 const csvWriter = createCsvWriter({
   header: ['DATE', 'QUERY', 'URL', 'IS_RELATED'],
   path: './data.csv',
@@ -27,11 +22,18 @@ const response = {
   values: [],
 }
 
+const app = express();
+app.use(bodyParser.json())
+app.use(cors());
+app.use(express.static('public'))
+
 app.listen(configs.PORT, () => {
   console.log(`Server is up at port ${configs.PORT}`);
 });
 
-app.get('/', (req, res) => {
+app.use('/', express.static('public'))
+
+app.get('/query', (req, res) => {
   const query = req.query.q;
 
   request({
@@ -53,7 +55,7 @@ app.get('/', (req, res) => {
   });
 });
 
-app.post('/', (req, res) => {
+app.post('/save', (req, res) => {
   const params = {
     query, webPage , isRelated
   } = req.body;

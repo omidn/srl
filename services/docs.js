@@ -5,6 +5,12 @@ const relatedDocsDictionary = require(`../${configs.RELATED_DOCS_DICT_PATH}`)
 const docPathDictionary = require(`../${configs.DOC_PATH}`)
 
 const findText = (path, uid) => new Promise((resolve, reject) => {
+  if (!path)
+    throw new Error('path is undefined');
+
+  if (!uid)
+    throw new Error('uid is undefined');
+  
   const filePath = `./${configs.DOCS_DIRECTORY}/${path}`;
   let found = false;
   const csvstream = csv.parseFile(filePath, { headers: true })

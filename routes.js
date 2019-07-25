@@ -60,13 +60,13 @@ router.get('/search', (req, res) => {
     const articles = [];
     asyncEach(relatedArticles, function(uid, callback) {
       const path = findFilePath(uid);
-      console.log('path', path)
+      
       // if the path was found in the DOCS_PATH
-      if (path !== undefined) {
-        findText(path, uid)
-          .then(article => articles.push({ uid, article }))
-          .then(callback)
-      } else callback();
+      findText(path, uid)
+        .then(article => articles.push({ uid, article }))
+        .catch(() => {})
+        .finally(callback);
+
     }, function(err) {
       res.json({
         ...response,
@@ -84,7 +84,7 @@ router.post('/verdict', (req, res) => {
   const params = {
     query, uid, verdict
   } = req.body;
-  console.log('params', params);
+
   csvWriter.writeRecords([[
     Date.now(), query, uid, verdict
   ]])

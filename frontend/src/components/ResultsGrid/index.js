@@ -8,16 +8,21 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import './styles.css';
 
-const Saved = () => (
-  <span className="savedLabel">Saved</span>
+const Saved = (props) => (
+  <div {...props}>
+    <span className="savedLabel">Saved</span>
+  </div>
 );
 
-const ActionsCell = ({ setIsRelated, result }) => result.labeled ? <Saved /> : (
-  <div>
-    <Button size="small" variant="contained" color="primary" onClick={() => setIsRelated(result, true)}> 
+const ActionsCell = ({ setIsRelated, result, ...otherProps }) => result.labeled ? <Saved {...otherProps} /> : (
+  <div { ...otherProps }>
+    <Button size="small" variant="contained" color="primary" onClick={() => setIsRelated(result.uid, 1)}> 
       Yes
     </Button>
-    <Button size="small" variant="contained" color="secondary" onClick={() => setIsRelated(result, false)}>
+    <Button size="small" variant="contained" onClick={() => setIsRelated(result.uid, 0)}> 
+      Not sure!
+    </Button>
+    <Button size="small" variant="contained" color="secondary" onClick={() => setIsRelated(result.uid, -1)}>
       No
     </Button>
   </div>
@@ -36,19 +41,17 @@ const ResultsGrid = ({ results, onResultSelected, setIsRelated }) => (
       <TableBody>
         {
           results.map(result => (
-            <TableRow key={result.url} className="resultRow">
+            <TableRow key={result.uid} className="resultRow">
               <TableCell className="resultContainer" onClick={() => onResultSelected(result)}>
                 <p className="resultTitle">
-                  <a href={result.url}>
-                    {result.name}
-                  </a>
+                  {result.uid}
                 </p>
                 <p className="resultSnippet">
-                  {result.snippet}
+                  {result.article}
                 </p>
               </TableCell>
-              <TableCell className="actionsContainer">
-                <ActionsCell setIsRelated={setIsRelated} result={result} />
+              <TableCell>
+                <ActionsCell className="actionsContainer" setIsRelated={setIsRelated} result={result} />
               </TableCell>
             </TableRow>                
           ))

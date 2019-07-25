@@ -8,8 +8,22 @@
 .resultsContainer {
   margin-top: 15px;
 }
+
 .actionsContainer button {
   margin: 4px;
+  width: 100px;
+}
+
+.actionsContainer {
+  width: 160px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.resultTitle {
+  font-weight: bold;
 }
 
 .resultSnippet {

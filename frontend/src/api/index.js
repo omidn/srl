@@ -1,7 +1,7 @@
 import { ENDPOINT } from '../config';
 
 export const search = (query) => new Promise((resolve, reject) => {
-  const path = `${ENDPOINT}/query?q=${query}`;
+  const path = `${ENDPOINT}/api/search?q=${query}`;
   const request = new Request (path, {
     method: 'GET',
   });
@@ -14,7 +14,7 @@ export const search = (query) => new Promise((resolve, reject) => {
 
 
 export const saveLabel = (form) => new Promise((resolve, reject) => {
-  const request = new Request(`${ENDPOINT}/save`, {
+  const request = new Request(`${ENDPOINT}/api/verdict`, {
     headers: {
       'Content-Type': 'application/json'
     },

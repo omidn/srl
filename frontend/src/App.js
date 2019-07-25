@@ -4,7 +4,6 @@ import SearchField from './components/SearchField';
 import ResultsGrid from './components/ResultsGrid';
 import { search, saveLabel } from './api';
 
-
 import './App.css';
 
 class App extends React.Component {
@@ -31,21 +30,21 @@ class App extends React.Component {
     this.setState({ selectedUrl: result.url });
   }
 
-  async setIsRelated(webPage, isRelated) {
+  async setIsRelated(uid, verdict) {
     await saveLabel({
       query: this.state.lastSearchQuery,
-      webPage,
-      isRelated
+      uid,
+      verdict,
     });
     
     const { results } = this.state;
-    const index = results.findIndex(x => x.url === webPage.url);
+    const index = results.findIndex(x => x.uid === uid);
 
     this.setState({
       results: [
         ...results.slice(0, index),
         {
-          ...webPage,
+          ...results[index],
           labeled: true
         },
         ...results.slice(index + 1)
@@ -59,9 +58,6 @@ class App extends React.Component {
         <Paper className="paper queryContainer">
           <SearchField onSearchClicked={this.onSearchClicked} />
           <ResultsGrid results={this.state.results} onResultSelected={this.onResultSelected} setIsRelated={this.setIsRelated} />
-        </Paper>
-        <Paper className="paper">
-          <iframe className="preview" src={this.state.selectedUrl} title="previewFrame" />
         </Paper>
       </div>
     );  

@@ -7,7 +7,7 @@ class SearchField extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: 'keine Änderungskündigung ausgesprochen',
+      value: '',
     };
 
     this.onHandleSearchClick = this.onHandleSearchClick.bind(this);

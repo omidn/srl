@@ -45,7 +45,7 @@ router.get('/search', (req, res) => {
     
     // read the response body
     const json = JSON.parse(r.body);
-    
+
     // records returned from BING cognitive search API
     let records = get(json, 'webPages.value', [])
 
@@ -54,17 +54,19 @@ router.get('/search', (req, res) => {
     
     // find all related articles
     const relatedArticles = flatten(records.reduce((acc, curr) => { acc.push([...findRelatedDocs(curr.uid)]); return acc; }, []));
+
+
     
     const articles = [];
     asyncEach(relatedArticles, function(uid, callback) {
       const path = findFilePath(uid);
-      
+      console.log('path', path)
       // if the path was found in the DOCS_PATH
       if (path !== undefined) {
         findText(path, uid)
           .then(article => articles.push({ uid, article }))
-          .then(callback);
-      }
+          .then(callback)
+      } else callback();
     }, function(err) {
       res.json({
         ...response,

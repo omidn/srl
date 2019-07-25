@@ -7,7 +7,7 @@ class SearchField extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: '',
+      value: 'keine Änderungskündigung ausgesprochen',
     };
 
     this.onHandleSearchClick = this.onHandleSearchClick.bind(this);
@@ -16,7 +16,7 @@ class SearchField extends React.Component {
 
   onHandleSearchClick() {
     const { onSearchClicked } = this.props;
-    onSearchClicked (this.state.value);
+    onSearchClicked(this.state.value);
   }
 
   onHandleQueryChange(e) {

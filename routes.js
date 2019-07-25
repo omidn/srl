@@ -55,8 +55,6 @@ router.get('/search', (req, res) => {
     // find all related articles
     const relatedArticles = flatten(records.reduce((acc, curr) => { acc.push([...findRelatedDocs(curr.uid)]); return acc; }, []));
 
-
-    
     const articles = [];
     asyncEach(relatedArticles, function(uid, callback) {
       const path = findFilePath(uid);
@@ -64,7 +62,7 @@ router.get('/search', (req, res) => {
       // if the path was found in the DOCS_PATH
       findText(path, uid)
         .then(article => articles.push({ uid, article }))
-        .catch(() => {})
+        .catch(() => { })
         .finally(callback);
 
     }, function(err) {

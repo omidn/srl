@@ -1,10 +1,14 @@
 const configs = require('../configs');
-const csv = require('fast-csv')
+// const csv = require('fast-csv')
+const parse = require('csv-parse')
+const fs = require('fs');
+
 
 const relatedDocsDictionary = require(`../${configs.RELATED_DOCS_DICT_PATH}`)
 const docPathDictionary = require(`../${configs.DOC_PATH}`)
 
 const findText = (path, uid) => new Promise((resolve, reject) => {
+  console.log(path);
   if (!path)
     throw new Error('path is undefined');
 
@@ -13,26 +17,26 @@ const findText = (path, uid) => new Promise((resolve, reject) => {
   
   const filePath = `./${configs.DOCS_DIRECTORY}/${path}`;
   let found = false;
-  const csvstream = csv.parseFile(filePath, { headers: true })
-    .on('data', function (row) {
-      csvstream.pause();
-      rowId = row['ch:appDocId'];
-      
+  const parser = parse({ delimiter: ',' });
+  
+  // Catch any error
+  parser.on('error', function(err){
+    console.error(err.message)
+  })
+  
+  parser.on('readable', function() {
+    let row;
+    while (row = parser.read()) {
+      const [rowId, rowUid, article] = row;
       // see if uid matches rowId in the csv file
-      if (rowId === uid) {
+      if (rowUid === uid) {
         found = true;
-        text = row['TextToShow']
-        csvstream.end();
-        resolve(text);
+        resolve(article + article + article + article);
       }
-      csvstream.resume();
-    })
-    .on('end', () => {
-      if (!found) {
-        reject('document not found');
-      }
-    })
-    .on('error', error => console.log(error));
+    }
+  });
+  console.log('exec');
+  fs.createReadStream(filePath).pipe(parser);
 });
 
 const findRelatedDocs = (uid) => relatedDocsDictionary[uid] || [];
